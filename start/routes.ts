@@ -20,28 +20,30 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+type MethodDefinition = {
+  httpMethod: string,
+  controllerMethod: string,
+  customMiddlewares: string[]
+}
+
+type ControllerDefinition = {
+  [path: string]: MethodDefinition
+}
+
 type RouteDefinition = {
-  [prefix: string] : {
-    controllerMiddlewares: string[],
-    [path: string]: {
-      httpMethod: string,
-      controllerMethod: string,
-      customMiddlewares: string[]
-    } | string[],
-  } | string[],
-  routesMiddlewares: string[]
+  [prefix: string]: ControllerDefinition
 }
 
 const routes: RouteDefinition = {
-  category: {
+  Category: {
     create: {
       httpMethod: 'post',
       controllerMethod: 'create',
       customMiddlewares: [],
     },
-    loadById: {
+    load: {
       httpMethod: 'get',
-      controllerMethod: 'loadById',
+      controllerMethod: 'load',
       customMiddlewares: [],
     },
     updateById: {
@@ -54,11 +56,13 @@ const routes: RouteDefinition = {
       controllerMethod: 'deleteById',
       customMiddlewares: [],
     },
-    controllerMiddlewares: [],
   },
-  routesMiddlewares: [],
 }
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+Object.entries(routes).forEach(([routePrefix, controllerDefinition]) => {
+  Object.entries(controllerDefinition).forEach(([routePath, methodDefinition]) => {
+    Route[methodDefinition.httpMethod](routePath, `${routePrefix}Controller.${methodDefinition.controllerMethod}`)
+      .prefix(routePrefix.toLowerCase())
+      .middleware([...methodDefinition.customMiddlewares])
+  })
 })
