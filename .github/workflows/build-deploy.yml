@@ -37,7 +37,7 @@ jobs:
 
         - name: Download task definition
           run: |
-            aws ecs describe-task-definition --task-definition ____task_name --query taskDefinition > task-definition.json
+            aws ecs describe-task-definition --task-definition financial-api --query taskDefinition > task-definition.json
 
         - name: Fill in the new image ID in the Amazon ECS task definition
           id: render-main-container
@@ -51,6 +51,6 @@ jobs:
           uses: aws-actions/amazon-ecs-deploy-task-definition@v1
           with:
             task-definition: ${{ steps.render-render-main-container.outputs.task-definition }}
-            service: ____service_name
-            cluster: ____cluster_name
+            service: financial-api-andre
+            cluster: financial-api
             wait-for-service-stability: true
