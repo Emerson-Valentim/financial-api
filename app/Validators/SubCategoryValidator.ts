@@ -1,9 +1,10 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { BaseValidator } from 'App/Controllers/BaseController/BaseController'
 
-export default class CategoryValidator implements BaseValidator {
+export default class SubCategoryValidator implements BaseValidator {
   public createValidation () {
     let createdSchema = schema.create({
+      category_id: schema.number([rules.exists({ table: 'categories', column: 'id' })]),
       name: schema.string(),
     })
     return createdSchema
@@ -11,7 +12,7 @@ export default class CategoryValidator implements BaseValidator {
 
   public findByIdValidation () {
     let createdSchema = schema.create({
-      id: schema.number.optional([rules.exists({table: 'categories', column: 'id'})]),
+      id: schema.number.optional([rules.exists({table: 'sub_categories', column: 'id'})]),
     })
 
     return createdSchema
@@ -19,15 +20,16 @@ export default class CategoryValidator implements BaseValidator {
 
   public updateByIdValidation () {
     const createdSchema = schema.create({
-      id: schema.number([rules.exists({table: 'categories', column: 'id'})]),
+      id: schema.number([rules.exists({table: 'sub_categories', column: 'id'})]),
       name: schema.string.optional(),
+      category_id: schema.number.optional([rules.exists({ table: 'categories', column: 'id' })]),
     })
     return createdSchema
   }
 
   public deleteByIdValidation () {
     const createdSchema = schema.create({
-      id: schema.number([rules.exists({table: 'categories', column: 'id'})]),
+      id: schema.number([rules.exists({table: 'sub_categories', column: 'id'})]),
     })
     return createdSchema
   }
