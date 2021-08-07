@@ -13,4 +13,10 @@ test.group('Authorizer Middleware', () => {
       .post('/category/load')
       .expect(404)
   })
+
+  test('Should call authenticated route and get code different from 401', async () => {
+    await supertest(process.env.BASE_URL)
+      .post('/category/load')
+      .expect((res) => res.status !== 401)
+  })
 })
