@@ -157,7 +157,7 @@ export const logger: LoggerConfig = {
   | Enable or disable logger application wide
   |
   */
-  enabled: Env.get('LOGGING'),
+  enabled: Env.get('LOGGING') && Env.get('NODE_ENV') !== 'testing',
 
   /*
   |--------------------------------------------------------------------------
@@ -180,7 +180,7 @@ export const logger: LoggerConfig = {
   | can have huge impact on performance.
   |
   */
-  prettyPrint: Env.get('LOGGING'),
+  prettyPrint: false,
 }
 
 /*
