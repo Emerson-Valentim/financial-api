@@ -78,7 +78,6 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
       const data = await request.validate({schema: this.validator[validatorMethod]()})
       return data
     } catch (error) {
-      console.log(error)
       const { message, status } = ValidationException.handleValidationFailure(error)
       throw new HttpException(message, status)
     }
