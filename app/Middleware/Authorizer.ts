@@ -12,7 +12,7 @@ export default class Authorizer {
   }
 
   private isAuthenticated (request) {
-    const { 'x-api-key': xApiKey, url} = request.headers()
-    return xApiKey !== Env.get('HEADER_API_KEY') && url !== '/healthCheck'
+    const { 'x-api-key': xApiKey} = request.headers()
+    return xApiKey !== Env.get('HEADER_API_KEY') && request.url() !== '/healthCheck'
   }
 }
