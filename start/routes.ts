@@ -18,6 +18,7 @@
 |
 */
 
+import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 import Route from '@ioc:Adonis/Core/Route'
 
 type MethodDefinition = {
@@ -66,3 +67,9 @@ Object.entries(routes).forEach(([routePrefix, controllerDefinition]) => {
       .middleware([...methodDefinition.customMiddlewares])
   })
 })
+
+Route.get('/healthCheck', async ({ response }) =>
+  HealthCheck.isLive()
+    ? response.status(200).send({ message: 'HealthCheck: Ok' })
+    : response.status(400).send({ message: 'HealthCheck: Fail' })
+)
