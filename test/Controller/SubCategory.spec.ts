@@ -1,4 +1,5 @@
 import Category from 'App/Models/Category'
+import SubCategory from 'App/Models/SubCategory'
 import test from 'japa'
 import supertest from 'supertest'
 
@@ -7,6 +8,18 @@ test.group('SubCategory controller', (group) => {
 
   group.before(async () => {
     validCategory = await Category.create({name: 'validCategory'})
+  })
+
+  group.beforeEach(async () => {
+    const SubCategories = (await SubCategory.all()).map(async subCategory => subCategory.delete())
+    await Promise.all(SubCategories)
+  })
+
+  test('Should call load and recieve 404 because database is empty', async () => {
+    await supertest(process.env.BASE_URL)
+      .get('/subcategory/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
   })
 
   test('Should call create and recieve 201', async () => {
@@ -37,18 +50,6 @@ test.group('SubCategory controller', (group) => {
         category_id: 0,
         name: 'validSubCategoryName',
       })
-      .set('x-api-key', process.env.HEADER_API_KEY)
-      .expect(404)
-  })
-
-  test('Should call load 404 because database is empty', async () => {
-    await supertest(process.env.BASE_URL)
-      .delete(`/category/deleteById/${validCategory.id}`)
-      .set('x-api-key', process.env.HEADER_API_KEY)
-      .expect(200)
-
-    await supertest(process.env.BASE_URL)
-      .get('/subcategory/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })

@@ -80,6 +80,28 @@ const routes: RouteDefinition = {
       customMiddlewares: [],
     },
   },
+  FinancialRelease: {
+    create: {
+      httpMethod: 'post',
+      controllerMethod: 'create',
+      customMiddlewares: [],
+    },
+    load: {
+      httpMethod: 'get',
+      controllerMethod: 'load',
+      customMiddlewares: [],
+    },
+    'updateById/:id': {
+      httpMethod: 'put',
+      controllerMethod: 'updateById',
+      customMiddlewares: [],
+    },
+    'deleteById/:id': {
+      httpMethod: 'delete',
+      controllerMethod: 'deleteById',
+      customMiddlewares: [],
+    },
+  },
 }
 
 Object.entries(routes).forEach(([routePrefix, controllerDefinition]) => {

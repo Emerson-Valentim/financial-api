@@ -52,7 +52,7 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
         if(model.length) {
           return response.ok(model)
         }
-        throw new HttpException('No registry found on database', 404)
+        throw new HttpException('No registry found in database', 404)
       }
     } catch (error) {
       throw error
