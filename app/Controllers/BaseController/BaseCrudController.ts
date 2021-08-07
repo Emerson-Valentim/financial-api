@@ -3,7 +3,7 @@ import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import HttpException from 'App/Exceptions/HttpException'
 import ValidationException from 'App/Exceptions/ValidationException'
 
-export interface BaseValidator {
+export interface BaseCrudValidator {
   createValidation()
   findByIdValidation()
   updateByIdValidation()
@@ -15,7 +15,7 @@ type ValidateError = {
   field: string
   message: string
 }
-export abstract class BaseController<Validator extends BaseValidator, Model extends LucidModel> {
+export abstract class BaseController<Validator extends BaseCrudValidator, Model extends LucidModel> {
   constructor (public readonly validator: Validator, public readonly model: Model) {}
 
   public async create ({ request, response }: HttpContextContract) {

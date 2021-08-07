@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import { BaseValidator } from 'App/Controllers/BaseController/BaseController'
+import { BaseCrudValidator } from 'App/Controllers/BaseController/BaseCrudController'
 
-export default class FinancialReleaseValidator implements BaseValidator {
+export default class FinancialReleaseValidator implements BaseCrudValidator {
   public createValidation () {
     let createdSchema = schema.create({
       value: schema.number([rules.notIn([0])]),

@@ -2,7 +2,7 @@
 
 import FinancialReleaseValidator from 'App/Validators/FinancialReleaseValidator'
 import FinancialRelease from 'App/Models/FinancialRelease'
-import { BaseController } from '../BaseController/BaseController'
+import { BaseController } from '../BaseController/BaseCrudController'
 
 export default class FinancialReleasesController extends BaseController< FinancialReleaseValidator,
 typeof FinancialRelease

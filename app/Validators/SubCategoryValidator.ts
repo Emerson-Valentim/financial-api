@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import { BaseValidator } from 'App/Controllers/BaseController/BaseController'
+import { BaseCrudValidator } from 'App/Controllers/BaseController/BaseCrudController'
 
-export default class SubCategoryValidator implements BaseValidator {
+export default class SubCategoryValidator implements BaseCrudValidator {
   public createValidation () {
     let createdSchema = schema.create({
       category_id: schema.number([rules.exists({ table: 'categories', column: 'id' })]),
