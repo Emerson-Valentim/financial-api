@@ -21,11 +21,11 @@ type ValidateError = {
 }
 
 export default class ValidationException extends Exception {
-  constructor (message: string, status: number) {
+  constructor (message, status) {
     super(message, status)
   }
 
-  private verifyExistRule (errorsArray: Array<ValidateError>): string {
+  private static verifyExistRule (errorsArray: Array<ValidateError>): string {
     for (let item of errorsArray) {
       if (item.rule === 'exists') {
         return item.field
@@ -34,34 +34,33 @@ export default class ValidationException extends Exception {
     return ''
   }
 
-  private joinInvalidParameters (errorsArray: Array<ValidateError>): string {
+  private static joinInvalidParameters (errorsArray: Array<ValidateError>): string {
     let invalidParameters = errorsArray.map((element) => element.field)
     return invalidParameters.join(', ')
   }
 
-  private handleValidationFailure (error: any) {
+  public static handleValidationFailure (error: any) {
     const missingParameterOnDatabase = this.verifyExistRule(error.messages?.errors)
     if (missingParameterOnDatabase) {
       return {
-        code: 404,
+        status: 404,
         message: `Provided ${missingParameterOnDatabase} parameter not exists on database`,
       }
     }
     const invalidParams = this.joinInvalidParameters(error.messages?.errors)
     if (invalidParams && !missingParameterOnDatabase) {
       return {
-        code: 400,
+        status: 400,
         message: `Invalid parameters provided: ${invalidParams}`,
       }
     }
     return {
-      code:400,
+      status:400,
       message: 'Invalid parameters',
     }
   }
 
   public async handle (error: this) {
-    const { message, code } = this.handleValidationFailure(error)
-    throw new HttpException(message, code)
+    throw new HttpException(error.message, error.status)
   }
 }

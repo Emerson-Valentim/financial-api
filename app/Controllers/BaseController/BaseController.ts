@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
+import HttpException from 'App/Exceptions/HttpException'
 import ValidationException from 'App/Exceptions/ValidationException'
 
 export interface BaseValidator {
@@ -9,6 +10,11 @@ export interface BaseValidator {
   deleteByIdValidation()
 }
 
+type ValidateError = {
+  rule: string
+  field: string
+  message: string
+}
 export abstract class BaseController<Validator extends BaseValidator, Model extends LucidModel> {
   constructor (public readonly validator: Validator, public readonly model: Model) {}
 
@@ -57,12 +63,48 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
     }
   }
 
-  protected validate (request, validatorMethod: string) {
+  protected async validate (request, validatorMethod: string) {
     try {
-      const data = request.validate({schema: this.validator[validatorMethod]()})
+      const data = await request.validate({schema: this.validator[validatorMethod]()})
       return data
     } catch (error) {
-      throw new ValidationException(error)
+      const { message, status } = ValidationException.handleValidationFailure(error)
+      throw new HttpException(message, status)
+    }
+  }
+
+  private verifyExistRule (errorsArray: Array<ValidateError>): string {
+    for (let item of errorsArray) {
+      if (item.rule === 'exists') {
+        return item.field
+      }
+    }
+    return ''
+  }
+
+  private joinInvalidParameters (errorsArray: Array<ValidateError>): string {
+    let invalidParameters = errorsArray.map((element) => element.field)
+    return invalidParameters.join(', ')
+  }
+
+  public handleValidationFailure (error: any) {
+    const missingParameterOnDatabase = this.verifyExistRule(error.messages?.errors)
+    if (missingParameterOnDatabase) {
+      return {
+        status: 404,
+        message: `Provided ${missingParameterOnDatabase} parameter not exists on database`,
+      }
+    }
+    const invalidParams = this.joinInvalidParameters(error.messages?.errors)
+    if (invalidParams && !missingParameterOnDatabase) {
+      return {
+        status: 400,
+        message: `Invalid parameters provided: ${invalidParams}`,
+      }
+    }
+    return {
+      status:400,
+      message: 'Invalid parameters',
     }
   }
 }
