@@ -4,10 +4,15 @@ import HttpException from 'App/Exceptions/HttpException'
 
 export default class Authorizer {
   public async handle ({ request }: HttpContextContract, next: () => Promise<void>) {
-    const xApiKey = request.header('x-api-key')
-    if(xApiKey !== Env.get('HEADER_API_KEY')) {
+    if(!this.isAuthenticated(request)) {
       throw new HttpException('You cant access this route, verify your request headers', 401)
     }
+
     await next()
+  }
+
+  private isAuthenticated (request) {
+    const { 'x-api-key': xApiKey, url} = request.headers()
+    return xApiKey !== Env.get('HEADER_API_KEY') && url !== '/healthCheck'
   }
 }
