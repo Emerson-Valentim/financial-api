@@ -50,7 +50,7 @@ jobs:
         - name: Deploy Amazon ECS task definition
           uses: aws-actions/amazon-ecs-deploy-task-definition@v1
           with:
-            task-definition: ${{ steps.render-render-main-container.outputs.task-definition }}
+            task-definition: ${{ steps.render-main-container.outputs.task-definition }}
             service: financial-api-andre
-            cluster: financial-api
+            cluster: financial-andre
             wait-for-service-stability: true
