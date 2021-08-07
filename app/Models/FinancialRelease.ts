@@ -9,9 +9,7 @@ export default class FinancialRelease extends BaseModel {
   @column()
   public value: number
 
-  @column({
-    serialize: (date) => date.toFormat('yyyy-LL-dd'),
-  })
+  @column()
   public release_date: DateTime
 
   @column()
