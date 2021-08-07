@@ -26,7 +26,7 @@ jobs:
         run: yarn
 
       - name: Run tests
-        run: yarn test
+        run: yarn coverage
         env:
           PORT: 80
           HOST: 0.0.0.0
