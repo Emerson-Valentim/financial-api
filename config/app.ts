@@ -66,7 +66,7 @@ export const http: ServerConfig = {
   | HTTP request and set it as `x-request-id` header.
   |
   */
-  generateRequestId: false,
+  generateRequestId: true,
 
   /*
   |--------------------------------------------------------------------------
@@ -157,7 +157,7 @@ export const logger: LoggerConfig = {
   | Enable or disable logger application wide
   |
   */
-  enabled: true,
+  enabled: Env.get('LOGGING'),
 
   /*
   |--------------------------------------------------------------------------
@@ -180,7 +180,7 @@ export const logger: LoggerConfig = {
   | can have huge impact on performance.
   |
   */
-  prettyPrint: Env.get('NODE_ENV') === 'development',
+  prettyPrint: Env.get('LOGGING'),
 }
 
 /*
