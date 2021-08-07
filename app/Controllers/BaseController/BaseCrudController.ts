@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import HttpException from 'App/Exceptions/HttpException'
-import ValidationException from 'App/Exceptions/ValidationException'
+import BaseValidator from 'App/Validators/BaseValidator'
 
 export interface BaseCrudValidator {
   createValidation()
@@ -10,16 +10,11 @@ export interface BaseCrudValidator {
   deleteByIdValidation()
 }
 
-type ValidateError = {
-  rule: string
-  field: string
-  message: string
-}
 export abstract class BaseController<Validator extends BaseCrudValidator, Model extends LucidModel> {
   constructor (public readonly validator: Validator, public readonly model: Model) {}
 
   public async create ({ request, response }: HttpContextContract) {
-    const data = await this.validate(request, 'createValidation')
+    const data = await BaseValidator.validate(request, 'createValidation', this.validator)
     try {
       const model = await this.model.create(data)
       return response.created(model)
@@ -29,7 +24,7 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
   }
 
   public async deleteById ({ request, response }: HttpContextContract) {
-    const data = await this.validate(request, 'findByIdValidation')
+    const data = await BaseValidator.validate(request, 'findByIdValidation', this.validator)
     try {
       const model = await this.model.findOrFail(data.id)
       await model.delete()
@@ -40,7 +35,7 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
   }
 
   public async load ({ request, response }: HttpContextContract) {
-    const { id } = await this.validate(request, 'findByIdValidation')
+    const { id } = await BaseValidator.validate(request, 'findByIdValidation', this.validator)
     try {
       let model
 
@@ -60,7 +55,7 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
   }
 
   public async updateById ({ request, response }: HttpContextContract) {
-    const { id, ...data } = await this.validate(request, 'updateByIdValidation')
+    const { id, ...data } = await BaseValidator.validate(request, 'updateByIdValidation', this.validator)
     try {
       const model = await this.model.findOrFail(id)
 
@@ -70,50 +65,6 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
       return response.ok(model)
     } catch (error) {
       throw error
-    }
-  }
-
-  protected async validate (request, validatorMethod: string) {
-    try {
-      const data = await request.validate({schema: this.validator[validatorMethod]()})
-      return data
-    } catch (error) {
-      const { message, status } = ValidationException.handleValidationFailure(error)
-      throw new HttpException(message, status)
-    }
-  }
-
-  private verifyExistRule (errorsArray: Array<ValidateError>) {
-    for (let item of errorsArray) {
-      if (item.rule === 'exists') {
-        return item.field
-      }
-    }
-  }
-
-  private joinInvalidParameters (errorsArray: Array<ValidateError>): string {
-    let invalidParameters = errorsArray.map((element) => element.field)
-    return invalidParameters.join(', ')
-  }
-
-  public handleValidationFailure (error: any) {
-    const missingParameterOnDatabase = this.verifyExistRule(error.messages?.errors)
-    if (missingParameterOnDatabase) {
-      return {
-        status: 404,
-        message: `Provided ${missingParameterOnDatabase} parameter not exists on database`,
-      }
-    }
-    const invalidParams = this.joinInvalidParameters(error.messages?.errors)
-    if (invalidParams && !missingParameterOnDatabase) {
-      return {
-        status: 400,
-        message: `Invalid parameters provided: ${invalidParams}`,
-      }
-    }
-    return {
-      status:400,
-      message: 'Invalid parameters',
     }
   }
 }
