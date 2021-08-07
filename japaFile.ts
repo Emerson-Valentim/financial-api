@@ -7,7 +7,7 @@ import sourceMapSupport from 'source-map-support'
 
 process.env.NODE_ENV = 'testing'
 process.env.ADONIS_ACE_CWD = join(__dirname)
-process.env.X_API_KEY = 'testing'
+process.env.HEADER_API_KEY = 'testing'
 
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
