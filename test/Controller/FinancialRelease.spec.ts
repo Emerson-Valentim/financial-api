@@ -1,4 +1,5 @@
 import Category from 'App/Models/Category'
+import FinancialRelease from 'App/Models/FinancialRelease'
 import SubCategory from 'App/Models/SubCategory'
 import test from 'japa'
 import supertest from 'supertest'
@@ -19,6 +20,18 @@ test.group('FinancialRelease controller', (group) => {
       category_id: validCategory.id,
       name: 'validSubCategory',
     })
+  })
+
+  group.beforeEach(async () => {
+    const financialReleases = (await FinancialRelease.all()).map(async financialRelease => financialRelease.delete())
+    await Promise.all(financialReleases)
+  })
+
+  test('Should call load and recieve 404 because database is empty', async () => {
+    await supertest(process.env.BASE_URL)
+      .get('/financialrelease/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
   })
 
   test('Should call create and recieve 201', async () => {
@@ -57,13 +70,6 @@ test.group('FinancialRelease controller', (group) => {
         release_date: '07/07/2021',
         observation: 'Olá',
       })
-      .set('x-api-key', process.env.HEADER_API_KEY)
-      .expect(404)
-  })
-
-  test('Should call load and recieve 404 because database is empty', async () => {
-    await supertest(process.env.BASE_URL)
-      .get('/financialrelease/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })

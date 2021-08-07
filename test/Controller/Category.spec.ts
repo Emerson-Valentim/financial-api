@@ -1,8 +1,8 @@
 import test from 'japa'
 import supertest from 'supertest'
 
-test.group('Category controller', () => {
-  test('Should call create and get 201', async () => {
+test.group('Category controller', (group) => {
+  test('Should call create and recieve 201', async () => {
     const validCategory = {
       name: 'Category 1',
     }
@@ -14,7 +14,7 @@ test.group('Category controller', () => {
       .expect(201)
   })
 
-  test('Should call create and get 400', async () => {
+  test('Should call create and recieve 400', async () => {
     const validCategory = {
       invalidField: 'Category 1',
     }

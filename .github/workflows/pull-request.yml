@@ -10,8 +10,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          DB_USER: postgres
-          DB_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
           POSTGRES_DB: financial_testing
         options: >-
           --health-cmd pg_isready
@@ -37,9 +37,7 @@ jobs:
           DB_PASSWORD: postgres
           DB_NAME: financial
           DB_PORT: 5432
-          DB_CONNECTION: pg
-          BULL_REDIS_HOST: redis
-          BULL_REDIS_PORT: 6379
+          DB_HOST: postgres
           TZ: America/Sao_Paulo
           LOGGING: false
           HEADER_API_KEY: testing
