@@ -84,13 +84,12 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
     }
   }
 
-  private verifyExistRule (errorsArray: Array<ValidateError>): string {
+  private verifyExistRule (errorsArray: Array<ValidateError>) {
     for (let item of errorsArray) {
       if (item.rule === 'exists') {
         return item.field
       }
     }
-    return ''
   }
 
   private joinInvalidParameters (errorsArray: Array<ValidateError>): string {
