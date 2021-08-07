@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Logger from '@ioc:Adonis/Core/Logger'
 
-export default abstract class HttpLogger {
+export default class HttpLogger {
   public async handle (ctx: HttpContextContract, next: () => Promise<void>) {
     await next()
     HttpLogger.generateReponseLog(ctx)
