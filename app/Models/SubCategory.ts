@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import Category from './Category'
+import FinancialRelease from './FinancialRelease'
 
 export default class SubCategory extends BaseModel {
   @column({ isPrimary: true })
@@ -22,4 +23,9 @@ export default class SubCategory extends BaseModel {
     foreignKey: 'category_id',
   })
   public category: BelongsTo<typeof Category>
+
+  @hasMany(() => FinancialRelease, {
+    foreignKey: 'sub_category_id',
+  })
+  public subCategory: HasMany<typeof FinancialRelease>
 }
