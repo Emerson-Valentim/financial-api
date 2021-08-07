@@ -37,6 +37,7 @@ jobs:
           DB_PASSWORD: postgres
           DB_NAME: financial
           DB_PORT: 5432
+          DB_HOST: postgres
           TZ: America/Sao_Paulo
           LOGGING: false
           HEADER_API_KEY: testing
