@@ -42,8 +42,18 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
   public async load ({ request, response }: HttpContextContract) {
     const { id } = await this.validate(request, 'findByIdValidation')
     try {
-      const model = id ? await this.model.findOrFail(id) : await this.model.all()
-      return response.ok(model)
+      let model
+
+      if(id) {
+        model = await this.model.findOrFail(id)
+        return response.ok(model)
+      } else {
+        model = await this.model.all()
+        if(model.length) {
+          return response.ok(model)
+        }
+        throw new HttpException('No registry found on database', 404)
+      }
     } catch (error) {
       throw error
     }
@@ -73,13 +83,12 @@ export abstract class BaseController<Validator extends BaseValidator, Model exte
     }
   }
 
-  private verifyExistRule (errorsArray: Array<ValidateError>): string {
+  private verifyExistRule (errorsArray: Array<ValidateError>) {
     for (let item of errorsArray) {
       if (item.rule === 'exists') {
         return item.field
       }
     }
-    return ''
   }
 
   private joinInvalidParameters (errorsArray: Array<ValidateError>): string {
