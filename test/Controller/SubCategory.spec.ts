@@ -76,12 +76,12 @@ test.group('SubCategory controller', (group) => {
     const { body: model } = await createSubCategory({name: 'LoadTest'})
 
     const { body: loadAll } = await supertest(process.env.BASE_URL)
-      .get('/category/load')
+      .get('/subcategory/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
     const { body: loadById } = await supertest(process.env.BASE_URL)
-      .get(`/category/load/${model.id}`)
+      .get(`/subcategory/load/${model.id}`)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
