@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node ace serve --watch",
     "lint": "eslint . --ext=.ts",
-    "migrate": "node ace migration:run --force",
+    "migrate": "node ace migration:run --force=true",
     "test": "node -r @adonisjs/assembler/build/register japaFile.ts",
     "coverage": "nyc npm run test"
   },
