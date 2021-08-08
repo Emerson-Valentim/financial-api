@@ -1,7 +1,13 @@
+import Category from 'App/Models/Category'
 import test from 'japa'
 import supertest from 'supertest'
 
-test.group('Category controller', () => {
+test.group('Category controller', (group) => {
+  group.before(async () => {
+    const promisedCategories = (await Category.all()).map(async category => category.delete())
+    await Promise.all(promisedCategories)
+  })
+
   const createCategory = ({ name }) => {
     return supertest(process.env.BASE_URL)
       .post('/category/create')
