@@ -42,6 +42,13 @@ const databaseConfig: DatabaseConfig = {
         password: Env.get('DB_PASSWORD', ''),
         database: `${Env.get('DB_NAME')}_${Env.get('NODE_ENV')}`,
       },
+      pool: {
+        afterCreate: (connection, callback) => {
+          connection.query(`SET timezone = '${Env.get('TZ')}'`, (err) => {
+            callback(err, connection)
+          })
+        },
+      },
       migrations: {
         naturalSort: true,
       },
