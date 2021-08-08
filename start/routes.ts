@@ -102,6 +102,13 @@ const routes: RouteDefinition = {
       customMiddlewares: [],
     },
   },
+  Balance: {
+    countTotal: {
+      httpMethod: 'get',
+      controllerMethod: 'countTotal',
+      customMiddlewares: [],
+    },
+  },
 }
 
 Object.entries(routes).forEach(([routePrefix, controllerDefinition]) => {
