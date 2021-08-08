@@ -10,6 +10,20 @@ test.group('Category controller', () => {
       .expect(201)
   }
 
+  test('Should call load and receive 404 because database is empty', async () => {
+    await supertest(process.env.BASE_URL)
+      .get('/category/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
+  })
+
+  test('Should call load and receive 404 because id not valid', async () => {
+    await supertest(process.env.BASE_URL)
+      .get('/category/load/0')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
+  })
+
   test('Should call create and receive 201', async () => {
     const validCategory = {
       name: 'Category 1',
