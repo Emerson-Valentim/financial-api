@@ -1,7 +1,7 @@
 import test from 'japa'
 import supertest from 'supertest'
 
-test.group('Category controller', (group) => {
+test.group('Category controller', () => {
   test('Should call create and recieve 201', async () => {
     const validCategory = {
       name: 'Category 1',
