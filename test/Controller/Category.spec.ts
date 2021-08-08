@@ -23,13 +23,12 @@ test.group('Category controller', (group) => {
       .expect(404)
   })
 
-  test('Should call load and receive 404 because id not valid', async () => {
+  test('Should call load and receive 404 because name is not valid', async () => {
     await supertest(process.env.BASE_URL)
-      .get('/category/load/0')
+      .get('/category/load?name=0')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
-
   test('Should call create and receive 201', async () => {
     const validCategory = {
       name: 'Category 1',
@@ -83,13 +82,13 @@ test.group('Category controller', (group) => {
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
-    const { body: loadById } = await supertest(process.env.BASE_URL)
-      .get(`/category/load/${model.id}`)
+    const { body: loadByName } = await supertest(process.env.BASE_URL)
+      .get(`/category/load?name=${model.name}`)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
     assert.isAtLeast(loadAll.length, 1)
-    assert.equal(loadById.id, model.id)
+    assert.equal(loadByName.id, model.id)
   })
 
   test('Should call deleteById and receive 200', async (assert) => {
