@@ -32,6 +32,8 @@ export abstract class CountTotal {
 
     const mappedResult = await this.toObject(query)
 
+    this.fixPrecision(mappedResult)
+
     if(categoryModel) {
       return {
         categoria: {
@@ -63,5 +65,15 @@ export abstract class CountTotal {
       despesa:0,
       saldo: 0,
     })
+  }
+
+  private static fixPrecision (countTotal: CountInterface) {
+    Object
+      .keys(countTotal)
+      .forEach(key => {
+        if(typeof(countTotal[key]) === 'number') {
+          countTotal[key] = countTotal[key].toFixed(2)
+        }
+      })
   }
 }
