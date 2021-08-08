@@ -108,4 +108,28 @@ test.group('FinancialRelease controller', (group) => {
     assert.isAtLeast(loadAll.length, 1)
     assert.equal(loadById.id, model.id)
   })
+
+  test('Should call update and receive 200 and update model', async (assert) => {
+    const validFinancialRelease = {
+      sub_category_id: validSubCategory.id,
+      value: 10.0,
+      release_date: '07/07/2021',
+      observation: 'Olá',
+    }
+
+    const { body: model } = await supertest(process.env.BASE_URL)
+      .post('/financialrelease/create')
+      .send(validFinancialRelease)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(201)
+
+    const { body: updatedModel } = await supertest(process.env.BASE_URL)
+      .put(`/financialrelease/updateById/${model.id}`)
+      .send({value: -10.01})
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(updatedModel.value, -10.01)
+    assert.notEqual(updatedModel.value, validFinancialRelease.value)
+  })
 })

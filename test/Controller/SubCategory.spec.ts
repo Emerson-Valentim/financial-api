@@ -88,4 +88,26 @@ test.group('SubCategory controller', (group) => {
     assert.isAtLeast(loadAll.length, 1)
     assert.equal(loadById.id, model.id)
   })
+
+  test('Should call update and receive 200 and update model', async (assert) => {
+    const validSubCategory = {
+      name: 'Sub Category 1',
+      category_id: validCategory.id,
+    }
+
+    const { body: model } = await supertest(process.env.BASE_URL)
+      .post('/category/create')
+      .send(validSubCategory)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(201)
+
+    const { body: updatedModel } = await supertest(process.env.BASE_URL)
+      .put(`/category/updateById/${model.id}`)
+      .send({name: 'Updated Sub Category'})
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(updatedModel.name, 'Updated Sub Category')
+    assert.notEqual(updatedModel.name, validSubCategory.name)
+  })
 })

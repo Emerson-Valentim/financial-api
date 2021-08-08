@@ -37,15 +37,36 @@ test.group('Category controller', () => {
   })
 
   test('Should call create and receive 400', async () => {
-    const validCategory = {
+    const invalidCategory = {
       invalidField: 'Category 1',
     }
 
     await supertest(process.env.BASE_URL)
       .post('/category/create')
-      .send(validCategory)
+      .send(invalidCategory)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(400)
+  })
+
+  test('Should call update and receive 200 and update model', async (assert) => {
+    const validCategory = {
+      name: 'Category 1',
+    }
+
+    const { body: model } = await supertest(process.env.BASE_URL)
+      .post('/category/create')
+      .send(validCategory)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(201)
+
+    const { body: updatedModel } = await supertest(process.env.BASE_URL)
+      .put(`/category/updateById/${model.id}`)
+      .send({name: 'UpdatedModel'})
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(updatedModel.name, 'UpdatedModel')
+    assert.notEqual(updatedModel.name, validCategory.name)
   })
 
   test('Should call load and receive 200', async (assert) => {
