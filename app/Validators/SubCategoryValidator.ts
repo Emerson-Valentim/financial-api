@@ -1,5 +1,5 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import { BaseCrudValidator } from 'App/Controllers/BaseController/BaseCrudController'
+import { BaseCrudValidator } from 'App/Controllers/BaseController/CrudController'
 
 export default class SubCategoryValidator implements BaseCrudValidator {
   public createValidation () {
