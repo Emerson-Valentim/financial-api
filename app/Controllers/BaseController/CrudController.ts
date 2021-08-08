@@ -24,7 +24,7 @@ export abstract class CrudController<Validator extends BaseCrudValidator, Model 
   }
 
   public async deleteById ({ request, response }: HttpContextContract) {
-    const data = await BaseValidator.validate(request, 'findByIdValidation', this.validator)
+    const data = await BaseValidator.validate(request, 'deleteByIdValidation', this.validator)
     try {
       const model = await this.model.findOrFail(data.id)
       await model.delete()
