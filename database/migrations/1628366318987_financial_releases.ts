@@ -14,7 +14,6 @@ export default class FinancialReleases extends BaseSchema {
         .notNullable()
       table
         .string('observation')
-        .notNullable()
       table
         .integer('sub_category_id')
         .references('sub_categories.id')
