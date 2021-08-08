@@ -8,6 +8,19 @@ test.group('FinancialRelease controller', (group) => {
   let validCategory
   let validSubCategory
 
+  const createFinancialRelease = ({ sub_category_id, value, release_date, observation }) => {
+    return supertest(process.env.BASE_URL)
+      .post('/financialrelease/create')
+      .send({
+        sub_category_id,
+        value,
+        release_date,
+        observation,
+      })
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(201)
+  }
+
   const deleteReport = (id) => {
     return supertest(process.env.BASE_URL)
       .delete(`/financialrelease/deleteById/${id}`)
@@ -22,7 +35,7 @@ test.group('FinancialRelease controller', (group) => {
     })
   })
 
-  group.beforeEach(async () => {
+  group.afterEach(async () => {
     const financialReleases = (await FinancialRelease.all()).map(async financialRelease => financialRelease.delete())
     await Promise.all(financialReleases)
   })
@@ -72,5 +85,27 @@ test.group('FinancialRelease controller', (group) => {
       })
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
+  })
+
+  test('Should call load and receive 200', async (assert) => {
+    const { body: model } = await createFinancialRelease({
+      sub_category_id: validSubCategory.id,
+      value: 10.0,
+      release_date: '07/07/2021',
+      observation: 'Olá',
+    })
+
+    const { body: loadAll } = await supertest(process.env.BASE_URL)
+      .get('/category/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    const { body: loadById } = await supertest(process.env.BASE_URL)
+      .get(`/category/load/${model.id}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.isAtLeast(loadAll.length, 1)
+    assert.equal(loadById.id, model.id)
   })
 })
