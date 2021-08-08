@@ -11,7 +11,6 @@ export default class CategoryValidator implements BaseCrudValidator {
 
   public filterValidation () {
     let createdSchema = schema.create({
-      id: schema.number.optional([rules.exists({table: 'categories', column: 'id'})]),
       name: schema.string.optional({ trim:true },[rules.exists({table: 'categories', column: 'name'})]),
     })
 
