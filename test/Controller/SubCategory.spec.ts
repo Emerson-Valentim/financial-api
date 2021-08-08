@@ -72,7 +72,7 @@ test.group('SubCategory controller', (group) => {
       .expect(404)
   })
 
-  test('Should call load and receive 200', async (assert) => {
+  test('Should call load passing id and receive 200', async (assert) => {
     const { body: model } = await createSubCategory({name: 'LoadTest'})
 
     const { body: loadAll } = await supertest(process.env.BASE_URL)
@@ -86,6 +86,17 @@ test.group('SubCategory controller', (group) => {
       .expect(200)
 
     assert.isAtLeast(loadAll.length, 1)
+    assert.equal(loadById.id, model.id)
+  })
+
+  test('Should call load passing name and receive 200', async (assert) => {
+    const { body: model } = await createSubCategory({name: 'LoadTest'})
+
+    const { body: loadById } = await supertest(process.env.BASE_URL)
+      .get(`/subcategory/load?name=${model.name}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
     assert.equal(loadById.id, model.id)
   })
 
