@@ -49,7 +49,7 @@ test.group('FinancialRelease controller', (group) => {
 
   test('Should call load and receive 404 because database is empty', async () => {
     await supertest(process.env.BASE_URL)
-      .get('/financialrelease/load')
+      .get('/financialrelease/load?sub_category_id=0')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
@@ -85,21 +85,40 @@ test.group('FinancialRelease controller', (group) => {
       .expect(404)
   })
 
-  test('Should call load and receive 200', async (assert) => {
-    const { body: model } = await createFinancialRelease(validFinancialRelease)
-
-    const { body: loadAll } = await supertest(process.env.BASE_URL)
+  test('Should call load and receive 400 because sub_category_id is not provided', async () => {
+    await supertest(process.env.BASE_URL)
       .get('/financialrelease/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
-      .expect(200)
+      .expect(400)
+  })
 
-    const { body: loadById } = await supertest(process.env.BASE_URL)
+  test('Should call load and receive 400 because one date parameter is missing', async () => {
+    await supertest(process.env.BASE_URL)
+      .get(`/financialrelease/load?sub_category_id=${validSubCategory.id}&final_date=${validFinancialRelease.release_date}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(400)
+
+    await supertest(process.env.BASE_URL)
+      .get(`/financialrelease/load?sub_category_id=${validSubCategory.id}&initial_date=${validFinancialRelease.release_date}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(400)
+  })
+
+  test('Should call load and receive 200', async (assert) => {
+    await createFinancialRelease(validFinancialRelease)
+
+    const { body: loadAll } = await supertest(process.env.BASE_URL)
       .get(`/financialrelease/load?sub_category_id=${validSubCategory.id}`)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
+    const { body: loadByDate } = await supertest(process.env.BASE_URL)
+      .get(`/financialrelease/load?sub_category_id=${validSubCategory.id}&initial_date=${validFinancialRelease.release_date}&final_date=${validFinancialRelease.release_date}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
     assert.isAtLeast(loadAll.length, 1)
-    assert.equal(loadById.id, model.id)
+    assert.equal(loadByDate.length, loadAll.length)
   })
 
   test('Should call update and receive 200 and update model', async (assert) => {
