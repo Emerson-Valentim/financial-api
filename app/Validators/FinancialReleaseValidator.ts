@@ -12,9 +12,13 @@ export default class FinancialReleaseValidator implements BaseCrudValidator {
     return createdSchema
   }
 
-  public findByIdValidation () {
+  public filterValidation () {
     let createdSchema = schema.create({
       id: schema.number.optional([rules.exists({table: 'financial_releases', column: 'id'})]),
+      release_date: schema.date.optional({
+        format: 'dd/LL/yyyy',
+      },
+      [rules.exists({table: 'financial_releases', column: 'release_date'})]),
     })
 
     return createdSchema

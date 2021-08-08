@@ -9,9 +9,10 @@ export default class CategoryValidator implements BaseCrudValidator {
     return createdSchema
   }
 
-  public findByIdValidation () {
+  public filterValidation () {
     let createdSchema = schema.create({
       id: schema.number.optional([rules.exists({table: 'categories', column: 'id'})]),
+      name: schema.string.optional({ trim:true },[rules.exists({table: 'categories', column: 'name'})]),
     })
 
     return createdSchema
