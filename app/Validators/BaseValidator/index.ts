@@ -1,4 +1,4 @@
-import ValidationException from 'App/Exceptions/ValidationException'
+
 import HttpException from 'App/Exceptions/HttpException'
 type ValidateError = {
   rule: string
@@ -12,7 +12,7 @@ export default abstract class BaseValidator {
       const data = await request.validate({schema: validator[validatorMethod]()})
       return data
     } catch (error) {
-      const { message, status } = ValidationException.handleValidationFailure(error)
+      const { message, status } = this.handleValidationFailure(error)
       throw new HttpException(message, status)
     }
   }
