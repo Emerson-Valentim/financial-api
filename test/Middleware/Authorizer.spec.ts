@@ -10,13 +10,14 @@ test.group('Authorizer Middleware', () => {
 
   test('Should call authenticated route and receive 401', async () => {
     await supertest(process.env.BASE_URL)
-      .post('/category/load')
-      .expect(404)
+      .get('/category/load')
+      .expect(401)
   })
 
   test('Should call authenticated route and receive code different from 401', async () => {
     await supertest(process.env.BASE_URL)
-      .post('/category/load')
-      .expect((res) => res.status !== 401)
+      .get('/category/load/0')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
   })
 })
