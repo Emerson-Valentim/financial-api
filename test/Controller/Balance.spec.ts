@@ -45,22 +45,22 @@ test.group('Balance Controller', (group) => {
     FinancialRelease.createMany([
       {
         value: 100.00,
-        sub_category_id: validCategory.id,
+        sub_category_id: validSubCategory.id,
         release_date: DateTime.fromFormat('01/01/2021', 'dd/LL/yyyy'),
       },
       {
         value: -100.01,
-        sub_category_id: validCategory.id,
+        sub_category_id: validSubCategory.id,
         release_date: DateTime.fromFormat('01/01/2021', 'dd/LL/yyyy'),
       },
       {
         value: 1.00,
-        sub_category_id: validCategory.id,
+        sub_category_id: validSubCategory.id,
         release_date: DateTime.fromFormat('01/01/2021', 'dd/LL/yyyy'),
       },
       {
         value: 1000.00,
-        sub_category_id: validCategory.id,
+        sub_category_id: validSubCategory.id,
         release_date: DateTime.fromFormat('02/01/2021', 'dd/LL/yyyy'),
       },
     ])
