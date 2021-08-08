@@ -6,6 +6,17 @@ import supertest from 'supertest'
 test.group('SubCategory controller', (group) => {
   let validCategory
 
+  const createSubCategory = ({ name }) => {
+    return supertest(process.env.BASE_URL)
+      .post('/subcategory/create')
+      .send({
+        category_id: validCategory.id,
+        name: name,
+      })
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(201)
+  }
+
   group.before(async () => {
     validCategory = await Category.create({name: 'validCategory'})
   })
@@ -18,6 +29,13 @@ test.group('SubCategory controller', (group) => {
   test('Should call load and receive 404 because database is empty', async () => {
     await supertest(process.env.BASE_URL)
       .get('/subcategory/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(404)
+  })
+
+  test('Should call load and receive 404 because database is empty', async () => {
+    await supertest(process.env.BASE_URL)
+      .get('/subcategory/load/0')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
@@ -52,5 +70,22 @@ test.group('SubCategory controller', (group) => {
       })
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
+  })
+
+  test('Should call load and receive 200', async (assert) => {
+    const { body: model } = await createSubCategory({name: 'LoadTest'})
+
+    const { body: loadAll } = await supertest(process.env.BASE_URL)
+      .get('/category/load')
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    const { body: loadById } = await supertest(process.env.BASE_URL)
+      .get(`/category/load/${model.id}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.isAtLeast(loadAll.length, 1)
+    assert.equal(loadById.id, model.id)
   })
 })
