@@ -15,14 +15,14 @@ test.group('SubCategory controller', (group) => {
     await Promise.all(SubCategories)
   })
 
-  test('Should call load and recieve 404 because database is empty', async () => {
+  test('Should call load and receive 404 because database is empty', async () => {
     await supertest(process.env.BASE_URL)
       .get('/subcategory/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
 
-  test('Should call create and recieve 201', async () => {
+  test('Should call create and receive 201', async () => {
     await supertest(process.env.BASE_URL)
       .post('/subcategory/create')
       .send({
@@ -33,7 +33,7 @@ test.group('SubCategory controller', (group) => {
       .expect(201)
   })
 
-  test('Should call create and recieve 400 because name is not provided', async () => {
+  test('Should call create and receive 400 because name is not provided', async () => {
     await supertest(process.env.BASE_URL)
       .post('/subcategory/create')
       .send({
@@ -43,7 +43,7 @@ test.group('SubCategory controller', (group) => {
       .expect(400)
   })
 
-  test('Should call create and recieve 404 because category_id is not on database', async () => {
+  test('Should call create and receive 404 because category_id is not on database', async () => {
     await supertest(process.env.BASE_URL)
       .post('/subcategory/create')
       .send({

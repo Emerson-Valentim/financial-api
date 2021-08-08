@@ -27,14 +27,14 @@ test.group('FinancialRelease controller', (group) => {
     await Promise.all(financialReleases)
   })
 
-  test('Should call load and recieve 404 because database is empty', async () => {
+  test('Should call load and receive 404 because database is empty', async () => {
     await supertest(process.env.BASE_URL)
       .get('/financialrelease/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
 
-  test('Should call create and recieve 201', async () => {
+  test('Should call create and receive 201', async () => {
     const {body: { id }} = await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send({
@@ -48,7 +48,7 @@ test.group('FinancialRelease controller', (group) => {
     await deleteReport(id)
   })
 
-  test('Should call create and recieve 400 because date is not in valid format', async () => {
+  test('Should call create and receive 400 because date is not in valid format', async () => {
     await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send({
@@ -61,7 +61,7 @@ test.group('FinancialRelease controller', (group) => {
       .expect(400)
   })
 
-  test('Should call create and recieve 404 because sub_category_id is not in database', async () => {
+  test('Should call create and receive 404 because sub_category_id is not in database', async () => {
     await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send({
