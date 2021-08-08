@@ -5,6 +5,7 @@ import test from 'japa'
 import supertest from 'supertest'
 
 test.group('FinancialRelease controller', (group) => {
+  let validFinancialRelease
   let validCategory
   let validSubCategory
 
@@ -33,6 +34,12 @@ test.group('FinancialRelease controller', (group) => {
       category_id: validCategory.id,
       name: 'validSubCategory',
     })
+    validFinancialRelease = {
+      sub_category_id: validSubCategory.id,
+      value: 10.0,
+      release_date: '07/07/2021',
+      observation: 'Olá',
+    }
   })
 
   group.afterEach(async () => {
@@ -50,12 +57,7 @@ test.group('FinancialRelease controller', (group) => {
   test('Should call create and receive 201', async () => {
     const {body: { id }} = await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
-      .send({
-        sub_category_id: validSubCategory.id,
-        value: 10.0,
-        release_date: '07/07/2021',
-        observation: 'Olá',
-      })
+      .send(validFinancialRelease)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(201)
     await deleteReport(id)
@@ -65,10 +67,8 @@ test.group('FinancialRelease controller', (group) => {
     await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send({
-        sub_category_id: validSubCategory.id,
-        value: 10.0,
+        ...validFinancialRelease,
         release_date: '07/13/2021',
-        observation: 'Olá',
       })
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(400)
@@ -78,22 +78,15 @@ test.group('FinancialRelease controller', (group) => {
     await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send({
+        ...validFinancialRelease,
         sub_category_id: 0,
-        value: 10.0,
-        release_date: '07/07/2021',
-        observation: 'Olá',
       })
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(404)
   })
 
   test('Should call load and receive 200', async (assert) => {
-    const { body: model } = await createFinancialRelease({
-      sub_category_id: validSubCategory.id,
-      value: 10.0,
-      release_date: '07/07/2021',
-      observation: 'Olá',
-    })
+    const { body: model } = await createFinancialRelease(validFinancialRelease)
 
     const { body: loadAll } = await supertest(process.env.BASE_URL)
       .get('/category/load')
@@ -110,13 +103,6 @@ test.group('FinancialRelease controller', (group) => {
   })
 
   test('Should call update and receive 200 and update model', async (assert) => {
-    const validFinancialRelease = {
-      sub_category_id: validSubCategory.id,
-      value: 10.0,
-      release_date: '07/07/2021',
-      observation: 'Olá',
-    }
-
     const { body: model } = await supertest(process.env.BASE_URL)
       .post('/financialrelease/create')
       .send(validFinancialRelease)
@@ -131,5 +117,16 @@ test.group('FinancialRelease controller', (group) => {
 
     assert.equal(updatedModel.value, -10.01)
     assert.notEqual(updatedModel.value, validFinancialRelease.value)
+  })
+
+  test('Should call deleteById and receive 200', async (assert) => {
+    const { body: model } = await createFinancialRelease(validFinancialRelease)
+
+    const { body: deleteById } = await supertest(process.env.BASE_URL)
+      .delete(`/financialrelease/deleteById/${model.id}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(deleteById.message, `Id: ${model.id} Deleted.`)
   })
 })

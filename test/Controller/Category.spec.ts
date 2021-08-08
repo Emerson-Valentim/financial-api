@@ -85,4 +85,15 @@ test.group('Category controller', () => {
     assert.isAtLeast(loadAll.length, 1)
     assert.equal(loadById.id, model.id)
   })
+
+  test('Should call deleteById and receive 200', async (assert) => {
+    const { body: model } = await createCategory({name: 'DeleteTest'})
+
+    const { body: deleteById } = await supertest(process.env.BASE_URL)
+      .delete(`/category/deleteById/${model.id}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(deleteById.message, `Id: ${model.id} Deleted.`)
+  })
 })

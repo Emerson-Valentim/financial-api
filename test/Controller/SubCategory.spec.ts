@@ -110,4 +110,15 @@ test.group('SubCategory controller', (group) => {
     assert.equal(updatedModel.name, 'Updated Sub Category')
     assert.notEqual(updatedModel.name, validSubCategory.name)
   })
+
+  test('Should call deleteById and receive 200', async (assert) => {
+    const { body: model } = await createSubCategory({name: 'DeleteTest'})
+
+    const { body: deleteById } = await supertest(process.env.BASE_URL)
+      .delete(`/subcategory/deleteById/${model.id}`)
+      .set('x-api-key', process.env.HEADER_API_KEY)
+      .expect(200)
+
+    assert.equal(deleteById.message, `Id: ${model.id} Deleted.`)
+  })
 })
