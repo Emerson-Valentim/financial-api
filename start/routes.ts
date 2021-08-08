@@ -42,7 +42,7 @@ const routes: RouteDefinition = {
       controllerMethod: 'create',
       customMiddlewares: [],
     },
-    'load/:id?': {
+    'load': {
       httpMethod: 'get',
       controllerMethod: 'load',
       customMiddlewares: [],
