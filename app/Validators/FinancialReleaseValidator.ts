@@ -5,7 +5,7 @@ export default class FinancialReleaseValidator implements BaseCrudValidator {
   public createValidation () {
     let createdSchema = schema.create({
       value: schema.number([rules.notIn([0])]),
-      release_date: schema.date({format: 'dd/LL/yyyy'}),
+      release_date: schema.date.optional({format: 'dd/LL/yyyy'}),
       sub_category_id: schema.number([rules.exists({ table: 'sub_categories', column: 'id' })]),
       observation: schema.string.optional(),
     })
@@ -20,7 +20,6 @@ export default class FinancialReleaseValidator implements BaseCrudValidator {
       },
       [rules.exists({table: 'financial_releases', column: 'release_date'})]),
     })
-
     return createdSchema
   }
 

@@ -11,7 +11,6 @@ export default class FinancialReleases extends BaseSchema {
         .notNullable()
       table
         .date('release_date')
-        .notNullable()
       table
         .string('observation')
       table
