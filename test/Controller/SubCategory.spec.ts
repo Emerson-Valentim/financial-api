@@ -96,13 +96,13 @@ test.group('SubCategory controller', (group) => {
     }
 
     const { body: model } = await supertest(process.env.BASE_URL)
-      .post('/category/create')
+      .post('/subcategory/create')
       .send(validSubCategory)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(201)
 
     const { body: updatedModel } = await supertest(process.env.BASE_URL)
-      .put(`/category/updateById/${model.id}`)
+      .put(`/subcategory/updateById/${model.id}`)
       .send({name: 'Updated Sub Category'})
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
