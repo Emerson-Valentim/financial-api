@@ -58,6 +58,14 @@ jobs:
             container-name: financial-api
             image: ${{ steps.build-image.outputs.image }}
 
+        - name: Fill in the new image ID in the Amazon ECS task definition
+          id: render-migration-container
+          uses: aws-actions/amazon-ecs-render-task-definition@v1
+          with:
+            task-definition: task-definition.json
+            container-name: financial-api-migration
+            image: ${{ steps.render-main-container.outputs.task-definition }}
+
         - name: Deploy Amazon ECS task definition
           uses: aws-actions/amazon-ecs-deploy-task-definition@v1
           with:
