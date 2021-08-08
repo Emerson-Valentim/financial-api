@@ -94,7 +94,7 @@ test.group('FinancialRelease controller', (group) => {
       .expect(200)
 
     const { body: loadById } = await supertest(process.env.BASE_URL)
-      .get(`/financialrelease/load/${model.id}`)
+      .get(`/financialrelease/load?sub_category_id=${validSubCategory.id}`)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
