@@ -10,7 +10,7 @@ export interface BaseCrudValidator {
   deleteByIdValidation()
 }
 
-export abstract class BaseController<Validator extends BaseCrudValidator, Model extends LucidModel> {
+export abstract class CrudController<Validator extends BaseCrudValidator, Model extends LucidModel> {
   constructor (public readonly validator: Validator, public readonly model: Model) {}
 
   public async create ({ request, response }: HttpContextContract) {
