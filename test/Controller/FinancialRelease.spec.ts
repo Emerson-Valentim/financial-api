@@ -89,12 +89,12 @@ test.group('FinancialRelease controller', (group) => {
     const { body: model } = await createFinancialRelease(validFinancialRelease)
 
     const { body: loadAll } = await supertest(process.env.BASE_URL)
-      .get('/category/load')
+      .get('/financialrelease/load')
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
     const { body: loadById } = await supertest(process.env.BASE_URL)
-      .get(`/category/load/${model.id}`)
+      .get(`/financialrelease/load/${model.id}`)
       .set('x-api-key', process.env.HEADER_API_KEY)
       .expect(200)
 
