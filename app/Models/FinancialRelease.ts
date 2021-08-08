@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import SubCategory from './SubCategory'
+import FinancialReleaseHook from 'App/Hook/FinancialReleaseHook'
 
 export default class FinancialRelease extends BaseModel {
   @column({ isPrimary: true })
@@ -28,4 +29,9 @@ export default class FinancialRelease extends BaseModel {
     foreignKey: 'sub_category_id',
   })
   public subCategory: BelongsTo<typeof SubCategory>
+
+  @beforeCreate()
+  public static async beforeCreate (financialRelease: FinancialRelease) {
+    FinancialReleaseHook.updateReleaseDate(financialRelease)
+  }
 }

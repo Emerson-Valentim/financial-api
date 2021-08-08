@@ -5,12 +5,12 @@ import BaseValidator from 'App/Validators/BaseValidator'
 
 export interface BaseCrudValidator {
   createValidation()
-  findByIdValidation()
+  filterValidation()
   updateByIdValidation()
   deleteByIdValidation()
 }
 
-export abstract class BaseController<Validator extends BaseCrudValidator, Model extends LucidModel> {
+export abstract class CrudController<Validator extends BaseCrudValidator, Model extends LucidModel> {
   constructor (public readonly validator: Validator, public readonly model: Model) {}
 
   public async create ({ request, response }: HttpContextContract) {
@@ -24,7 +24,7 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
   }
 
   public async deleteById ({ request, response }: HttpContextContract) {
-    const data = await BaseValidator.validate(request, 'findByIdValidation', this.validator)
+    const data = await BaseValidator.validate(request, 'deleteByIdValidation', this.validator)
     try {
       const model = await this.model.findOrFail(data.id)
       await model.delete()
@@ -35,12 +35,12 @@ export abstract class BaseController<Validator extends BaseCrudValidator, Model 
   }
 
   public async load ({ request, response }: HttpContextContract) {
-    const { id } = await BaseValidator.validate(request, 'findByIdValidation', this.validator)
+    const data = await BaseValidator.validate(request, 'filterValidation', this.validator)
+    const [[key, value]] = Object.entries(data).length ? Object.entries(data) : [[]]
     try {
       let model
-
-      if(id) {
-        model = await this.model.findOrFail(id)
+      if(key) {
+        model = await this.model.findByOrFail(key, value)
         return response.ok(model)
       } else {
         model = await this.model.all()

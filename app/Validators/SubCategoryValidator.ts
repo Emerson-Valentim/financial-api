@@ -1,5 +1,5 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import { BaseCrudValidator } from 'App/Controllers/BaseController/BaseCrudController'
+import { BaseCrudValidator } from 'App/Controllers/BaseController/CrudController'
 
 export default class SubCategoryValidator implements BaseCrudValidator {
   public createValidation () {
@@ -10,11 +10,11 @@ export default class SubCategoryValidator implements BaseCrudValidator {
     return createdSchema
   }
 
-  public findByIdValidation () {
+  public filterValidation () {
     let createdSchema = schema.create({
       id: schema.number.optional([rules.exists({table: 'sub_categories', column: 'id'})]),
+      name: schema.string.optional({ trim:true },[rules.exists({table: 'sub_categories', column: 'name'})]),
     })
-
     return createdSchema
   }
 

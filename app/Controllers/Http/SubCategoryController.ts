@@ -2,9 +2,9 @@
 
 import SubCategory from 'App/Models/SubCategory'
 import SubCategoryValidator from 'App/Validators/SubCategoryValidator'
-import { BaseController } from '../BaseController/BaseCrudController'
+import { CrudController } from '../BaseController/CrudController'
 
-export default class SubCategoryController extends BaseController< SubCategoryValidator,
+export default class SubCategoryController extends CrudController< SubCategoryValidator,
 typeof SubCategory
 > {
   constructor () {

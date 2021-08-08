@@ -1,8 +1,8 @@
 import Category from 'App/Models/Category'
 import CategoryValidator from 'App/Validators/CategoryValidator'
-import { BaseController } from '../BaseController/BaseCrudController'
+import { CrudController } from '../BaseController/CrudController'
 
-export default class CategoryController extends BaseController< CategoryValidator,
+export default class CategoryController extends CrudController< CategoryValidator,
 typeof Category
 > {
   constructor () {
