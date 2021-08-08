@@ -22,7 +22,7 @@ test.group('Balance Controller', (group) => {
     await Promise.all(financialReleases)
   })
 
-  test('Should call balance count total without data and receive 400', async (assert) => {
+  test('Should call balance count total without data and receive 400', async () => {
     await supertest(process.env.BASE_URL)
       .get('/balance/countTotal')
       .set('x-api-key', process.env.HEADER_API_KEY)
