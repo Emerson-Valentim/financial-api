@@ -11,6 +11,108 @@ O projeto consiste em uma API escrita em Typescript utilizando o framework Adoni
 
 A utilização de docker se dá pela facilidade para compartilhar o projeto entre a equipe e disponibilizar versões executáveis com maior facilidade. O Typescript + AdonisJS foram escolhidos por facilitarem o desenvolvimento de aplicações baseadas em CRUD + Banco de dados. Existem algumas funcionalidades poderosas do AdonisJS que não foram utilizadas, mas facilitam muito na escalabilidade do sistema.
 
+## Requests
+
+##### Category CRUD
+
+`POST /category/create`
+
+```json
+{
+    "name": string
+}
+```
+
+`PUT /category/updateById/:id`
+
+```json
+{
+    "name": string
+}
+```
+
+`GET /category/load?name={name}`
+```json
+{
+    "name": string
+}
+```
+
+`DELETE /category/deleteById/:id`
+##### SubCategory CRUD
+
+`POST /subcategory/create`
+
+```json
+{
+    "category_id": number,
+    "name": string
+}
+```
+
+`PUT /subcategory/updateById/:id`
+
+```json
+{
+    "category_id": number,
+    "name": string
+}
+```
+
+`GET /subcategory/load?id={id}&name={name}`
+```json
+{
+    "id": number,
+    "name": string
+}
+```
+
+`DELETE /subcategory/deleteById/:id`
+
+##### FinancialRelease CRUD
+
+`POST /financialrelease/create`
+
+```json
+{
+    "value": number,
+    "release_date": date | optional,
+    "observation": string | optional,
+    "sub_category_id": number
+}
+```
+
+`PUT /financialrelease/updateById/:id`
+
+```json
+{
+    "value": number | optional,
+    "release_date": date | optional,
+    "observation": string | optional,
+    "sub_category_id": number | optional
+}
+```
+
+`GET /financialrelease/load?sub_category_id={sub_category_id}&initial_date={initial_date}&final_date={final_date}`
+```json
+{
+    "sub_category_id": number,
+    "initial_date": date | optional,
+    "final_date": date | optional
+}
+```
+
+`DELETE /financialrelease/deleteById/:id`
+
+##### Balance CRUD
+`GET /balance/countTotal?category_id={category_id}&initial_date={initial_date}&final_date={final_date}`
+```json
+{
+    "category_id": number | optional,
+    "initial_date": date,
+    "final_date": date
+}
+```
 ## Sobre o projeto
 
 O framework do AdonisJS propõe uma organização eficiente e de simples entendimento. Sobre os pontos solicitados no teste, irei pontuar um a um. Os diretórios principais estão localizados na pasta app, as outras pastas, em sua maioria, são referentes a configurações. 
